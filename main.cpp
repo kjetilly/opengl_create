@@ -14,7 +14,7 @@
 int main(int argc, char** argv) {
   
   
-  std::vector<std::string> displayStrings = {":0.0", ":0.1"};
+  std::vector<std::string> displayStrings = {":0.0", ":0.0"};
   for(auto displayString : displayStrings) {
     auto display = XOpenDisplay( displayString.c_str() );
     auto screenNumber = DefaultScreen( display );
