@@ -14,10 +14,13 @@
 int main(int argc, char** argv) {
   
   
-  std::vector<std::string> displayStrings = {":0.0", ":0.0"};
-  for(auto displayString : displayStrings) {
-    auto display = XOpenDisplay( displayString.c_str() );
-    auto screenNumber = DefaultScreen( display );
+  std::vector<std::string> displayStrings;
+  displayStrings.push_back(":0.0");
+  displayStrings.push_back(":0.0");
+  for(size_t i = 0; i < displayStrings.size(); ++i) {
+    std::string displayString = displayStrings[i];
+    Display* display = XOpenDisplay( displayString.c_str() );
+    int screenNumber = DefaultScreen( display );
     int glx_fb_configs_N;
     int fb_attrib[] = {
       GLX_RENDER_TYPE,    GLX_RGBA_BIT,
@@ -28,12 +31,12 @@ int main(int argc, char** argv) {
       None,
       None
     };
-    auto glx_fb_configs = glXChooseFBConfig( display,
+    GLXFBConfig* glx_fb_configs = glXChooseFBConfig( display,
 					     screenNumber,
 					     fb_attrib,
 					     &glx_fb_configs_N );
     
-    auto screen_number = DefaultScreen( display );
+    int screen_number = DefaultScreen( display );
     PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB_f = (PFNGLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddressARB((GLubyte *) "glXCreateContextAttribsARB");
     
     
@@ -42,14 +45,14 @@ int main(int argc, char** argv) {
     
     // Try direct and not direct
     
-    auto m_create_context_error = false;
+    bool m_create_context_error = false;
 
     
     std::cerr << "Before create context" << std::endl;
     std::cerr << "Display is " << displayString << std::endl;
     std::cerr << "glXCreateContextAttribsARB_f = " << (void*)glXCreateContextAttribsARB_f << std::endl;
     std::cerr << "Scren Number is " << screenNumber << std::endl;
-    auto context = glXCreateContextAttribsARB_f( display,
+    GLXContext context = glXCreateContextAttribsARB_f( display,
 						 glx_fb_configs[0],
 						 NULL,
 						 GL_TRUE,
